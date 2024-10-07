@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Lead Form</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --background-color: #ffffff;
+            --input-background: #f5f5f5;
+            --text-color: #333333;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-wrapper {
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-title {
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .agent-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .agent-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .agent-title {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: var(--input-background);
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3a7bc8;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-container label {
+            font-weight: normal;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .privacy-note {
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .thank-you-screen {
+            display: none;
+            text-align: center;
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .thank-you-screen h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .reten-crm-info {
+            font-size: 0.7em;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 0.8em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .form-wrapper, .thank-you-screen {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper" id="formWrapper">
+            <div class="form-title">20 Park Cres, Amherstview</div>
+            <div class="agent-info">
+                <img src="/api/placeholder/60/60" alt="Agent Photo" class="agent-photo">
+                <div class="agent-details">
+                    <span class="agent-name">John Doe</span>
+                    <span class="agent-title">Sales Representative</span>
+                </div>
+            </div>
+            <form id="leadForm">
+                <label for="name">Name*</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" required>
+                <div id="emailError" class="error-message"></div>
+
+                <label for="phone">Phone Number*</label>
+                <input type="tel" id="phone" name="phone" required>
+                <div id="phoneError" class="error-message"></div>
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">I agree to receive property updates and enter the $25 Tim Hortons gift card draw.*</label>
+                </div>
+
+                <button type="submit">Submit</button>
+            </form>
+            <p class="privacy-note">By submitting, you agree to receive updates about this and other properties. Your information will be used for the gift card drawing when the house is sold. You may unsubscribe at any time.</p>
+            <p class="reten-crm-info">This form system was created and offered to real estate agents across Canada by <a href="https://www.retencrm.com" target="_blank">Reten CRM</a>.</p>
+        </div>
+        <div class="thank-you-screen" id="thankYouScreen">
+            <h2>Thank You!</h2>
+            <p>Your information has been submitted successfully.</p>
+            <p>We'll be in touch soon with updates about 20 Park Cres, Amherstview.</p>
+        </div>
+    </div>
+
+    <script>
+        function formatPhoneNumber(phoneNumber) {
+            const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+            if (match) {
+                return '(' + match[1] + ') ' + match[2] + ' ' + match[3];
+            }
+            return null;
+        }
+
+        document.getElementById('phone').addEventListener('input', function (e) {
+            const formattedNumber = formatPhoneNumber(e.target.value);
+            if (formattedNumber) {
+                e.target.value = formattedNumber;
+            }
+        });
+
+        async function validateEmail(email) {
+            // This is a placeholder for email validation
+            // In a real-world scenario, you would use an email validation service API
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        document.getElementById('leadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const consent = document.getElementById('consent').checked;
+
+            let isValid = true;
+
+            // Email validation
+            if (!(await validateEmail(email))) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+                isValid = false;
+            } else {
+                document.getElementById('emailError').textContent = '';
+            }
+
+            // Phone validation
+            if (!formatPhoneNumber(phone)) {
+                document.getElementById('phoneError').textContent = 'Please enter a valid phone number.';
+                isValid = false;
+            } else {
+                document.getElementById('phoneError').textContent = '';
+            }
+
+            if (!name || !email || !phone || !consent || !isValid) {
+                return;
+            }
+
+            // Here you would typically send the form data to your server
+            console.log('Form submitted:', {
+                name: name,
+                email: email,
+                phone: phone,
+                consent: consent
+            });
+
+            // Show thank you screen
+            document.getElementById('formWrapper').style.display = 'none';
+            document.getElementById('thankYouScreen').style.display = 'block';
+        });
+
+        function changePrimaryColor(color) {
+            document.documentElement.style.setProperty('--primary-color', color);
+        }
+
+        function updateListingAddress(address) {
+            document.querySelector('.form-title').textContent = address;
+        }
+
+        function updateAgentInfo(name, photoUrl) {
+            document.querySelector('.agent-name').textContent = name;
+            document.querySelector('.agent-photo').src = photoUrl;
+        }
+    </script>
+</body>
+</html>
